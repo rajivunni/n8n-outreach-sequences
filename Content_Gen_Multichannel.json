@@ -1,0 +1,622 @@
+{
+  "name": "Content-Gen",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -608,
+        -32
+      ],
+      "id": "0c3a0389-93f4-45fc-986d-80195dfb3662",
+      "name": "When clicking \u2018Execute workflow\u2019"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d5d709e5-7676-4ab4-8a09-e59dff898c7f",
+              "name": "industry",
+              "value": "B2B Sales Services / Appointment Setting",
+              "type": "string"
+            },
+            {
+              "id": "61d6ca17-1244-487d-a4af-6f4165cf99fb",
+              "name": "target_audience",
+              "value": "Business owners, sales leaders, and founders at $500k\u2013$5M revenue companies who need qualified outbound meetings",
+              "type": "string"
+            },
+            {
+              "id": "db45f0f1-bf49-4dda-8d62-a705a8ec2a80",
+              "name": "topic_focus",
+              "value": "Outbound sales strategies, appointment setting, lead qualification, cost analysis, human vs automation in sales",
+              "type": "string"
+            },
+            {
+              "id": "62cb214c-8adb-4d3e-86f6-e7772cf95257",
+              "name": "brand_voice",
+              "value": "Professional yet personable, results-driven, ROI-focused, myth-busting. Uses real numbers. No hype language. Soft CTAs. Data-backed and tactical.",
+              "type": "string"
+            },
+            {
+              "id": "b5652ae7-d290-45f9-be47-b4237f2daa23",
+              "name": "=topic",
+              "value": "=={{ $json.choices[0].message.content }}\n",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -336,
+        -48
+      ],
+      "id": "6e37a6b9-ee6e-45b7-b759-fa45db1f499a",
+      "name": "Set Variables"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "=# Blog Post Prompt \u2014 Sales Connection Engine\n## n8n OpenAI Node \u2014 System + User Prompt\n\n---\n\n## VARIABLE DEFINITIONS (n8n Set Variables node)\n\n```\nindustry         = {{$node[\"Set Variables\"].json[\"industry\"]}}\ntarget_audience  = {{$node[\"Set Variables\"].json[\"target_audience\"]}}\ntopic_focus      = {{$node[\"Set Variables\"].json[\"topic_focus\"]}}\nbrand_voice      = {{$node[\"Set Variables\"].json[\"brand_voice\"]}}\ntopic            = {{$node[\"Set Variables\"].json[\"topic\"]}}\n```\n\n---\n\n## SYSTEM PROMPT\n\nYou are a professional B2B content writer specializing in outbound sales, appointment setting, and revenue operations. You write for Sales Connection Engine, a premium US-based appointment setting firm.\n\nYour writing is:\n- Data-backed: every major claim is supported by a number, benchmark, or real example\n- Tactical: readers walk away with something actionable, not just informed\n- Professional but direct: no corporate fluff, no motivational filler\n- Honest about trade-offs: you acknowledge when something has nuance instead of oversimplifying\n- Myth-busting in posture: you challenge lazy assumptions in the market\n\nYou do NOT:\n- Use hype language: no \"game-changing\", \"revolutionary\", \"crush it\", \"skyrocket\"\n- Write generic advice that applies to any business in any industry\n- Make claims without data or a grounding example\n- Use aggressive sales CTAs \u2014 always soft and conversational at the close\n- Use filler phrases: \"In today's landscape\", \"at the end of the day\", \"move the needle\", \"synergy\"\n\n---\n\n## USER PROMPT\n\nWrite an 800\u20131000 word blog post for Sales Connection Engine on the following topic:\n\n**Topic:** {{$node[\"Set Variables\"].json[\"topic\"]}}\n\n**Industry context:** {{$node[\"Set Variables\"].json[\"industry\"]}}\n**Target reader:** {{$node[\"Set Variables\"].json[\"target_audience\"]}}\n**Topic focus area:** {{$node[\"Set Variables\"].json[\"topic_focus\"]}}\n**Brand voice:** {{$node[\"Set Variables\"].json[\"brand_voice\"]}}\n\n---\n\n### STRUCTURE REQUIREMENTS\n\n**1. Hook (first 2\u20133 sentences)**\nOpen with a specific stat, a counterintuitive claim, or a direct question that stops the reader. The hook must be relevant to the target reader's pain or misconception. Do not open with \"In today's competitive landscape\" or any variant of that.\n\n**2. Setup paragraph (1 short paragraph)**\nGive 2\u20133 sentences of context that frames why this topic matters right now. No fluff \u2014 get to the point.\n\n**3. Main body (3\u20134 sections with subheadings)**\nEach section should:\n- Have a clear, specific subheading (not vague like \"The Problem\" \u2014 be concrete)\n- Cover one distinct angle or insight\n- Include at least one data point, cost figure, or real-world example per section\n- Be 150\u2013200 words per section\n\n**4. Tactical takeaways**\nBefore the close, include a short list (3\u20135 items) of specific, actionable things the reader can do or think about differently. Label this section \"What to Do With This.\"\n\n**5. Closing paragraph + soft CTA**\n2\u20133 sentences that land the core point without summarizing everything above. End with a low-friction question or observation \u2014 not a sales pitch. Examples:\n- \"Curious what your fully-loaded SDR cost actually looks like? Happy to run the math.\"\n- \"If any of this sounds familiar, worth a conversation.\"\n- \"What does your current outbound process look like at this stage?\"\n\n---\n\n### STYLE RULES\n\n- Sentence variety: mix short punchy sentences (under 10 words) with longer context sentences\n- Paragraph length: no paragraph over 4 sentences in the body\n- Numbers: use specific figures wherever possible ($72k, 4\u20136%, 200 dials/day)\n- Subheadings: informative, not clever \u2014 tell the reader what the section is about\n- Word count target: 800\u20131000 words (do not go under 750 or over 1100)\n- No bullet-list dumps in the main body \u2014 bullets only in the \"What to Do With This\" section\n- No exclamation points\n- No em-dash overuse \u2014 maximum 2 per post\n\n---\n\n### OUTPUT FORMAT\n\nReturn the post in this exact format:\n\n```\nTITLE: [Post title]\n\nMETA DESCRIPTION: [1\u20132 sentence summary, 140\u2013160 characters, for SEO]\n\n---\n\n[Full blog post body]\n\n---\n\nWORD COUNT: [Approximate word count]\n```\n"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {
+          "maxTokens": 2000,
+          "temperature": 0.7
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        -128,
+        -304
+      ],
+      "id": "fe14552c-413b-40e5-b798-9bccc776b077",
+      "name": "OpenAI: Blog Post",
+      "credentials": {
+        "openAiApi": {
+          "id": "DskVTOJ1NdjW0dve",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "=# LinkedIn Educational Post Prompt \u2014 Sales Connection Engine\n## n8n OpenAI Node \u2014 System + User Prompt\n\n---\n\n## VARIABLE DEFINITIONS (n8n Set Variables node)\n\n```\nindustry         = {{$node[\"Set Variables\"].json[\"industry\"]}}\ntarget_audience  = {{$node[\"Set Variables\"].json[\"target_audience\"]}}\ntopic_focus      = {{$node[\"Set Variables\"].json[\"topic_focus\"]}}\nbrand_voice      = {{$node[\"Set Variables\"].json[\"brand_voice\"]}}\ntopic            = {{$node[\"Set Variables\"].json[\"topic\"]}}\n```\n\n---\n\n## SYSTEM PROMPT\n\nYou are a LinkedIn content writer for Sales Connection Engine, a premium US-based appointment setting firm. You write posts that educate B2B sales leaders and business owners on outbound strategy, appointment setting, and pipeline development.\n\nYour LinkedIn posts:\n- Lead with a hook that earns the \"see more\" click \u2014 stat, direct question, or contrarian claim\n- Deliver real, specific information \u2014 not surface-level advice\n- Use real numbers wherever possible (percentages, dollar figures, ratios)\n- Sound like a practitioner who runs outbound programs, not a consultant who advises on them\n- End with a question that invites genuine conversation, not engagement bait\n\nYou do NOT:\n- Use hype language or empty motivational phrases\n- Write generic tips that apply to any business\n- Use more than 3 hashtags\n- End with \"Like and share if you found this valuable\"\n- Use hollow phrases: \"In today's world\", \"game-changer\", \"crush it\", \"synergy\"\n- Write paragraphs longer than 2 sentences on LinkedIn\n\n---\n\n## USER PROMPT\n\nWrite a LinkedIn educational post for Sales Connection Engine on the following topic:\n\n**Topic:** {{$node[\"Set Variables\"].json[\"topic\"]}}\n\n**Industry context:** {{$node[\"Set Variables\"].json[\"industry\"]}}\n**Target reader:** {{$node[\"Set Variables\"].json[\"target_audience\"]}}\n**Topic focus area:** {{$node[\"Set Variables\"].json[\"topic_focus\"]}}\n**Brand voice:** {{$node[\"Set Variables\"].json[\"brand_voice\"]}}\n\n---\n\n### STRUCTURE REQUIREMENTS\n\n**1. Hook (1\u20132 lines)**\nThe first line must stop the scroll. Options:\n- Open with a specific, surprising stat related to the topic\n- Ask a direct question the target reader would genuinely wonder about\n- Make a contrarian claim that challenges a common assumption\n\nThe hook must stand alone \u2014 it should make sense and create curiosity even if the reader sees nothing else.\n\n**2. Body (3\u20134 short insights or tips)**\n- Each point: 1\u20132 sentences maximum\n- Blank line between each point for LinkedIn readability\n- At least one point should include a specific number or benchmark\n- Points should build on each other \u2014 not a random list\n- No bullet points \u2014 write as flowing short paragraphs separated by line breaks\n\n**3. Closing question (1 line)**\nEnd with a single question that invites the reader to share their experience or opinion. Make it specific to the topic \u2014 not \"what do you think?\" but something like \"What does your team's connect rate look like right now?\"\n\n**4. Hashtags (max 3)**\nUse only relevant, low-noise hashtags. Prefer: #OutboundSales #AppointmentSetting #B2BSales #SalesDevelopment #SDR\nDo not use trending or irrelevant hashtags to chase reach.\n\n---\n\n### STYLE RULES\n\n- Total length: 150\u2013200 words (strict \u2014 LinkedIn educational posts lose readers after 200 words)\n- Line breaks: every 1\u20132 sentences, blank line between thoughts\n- No exclamation points\n- No em-dashes\n- No parenthetical asides\n- Write \"we\" when referring to Sales Connection Engine's experience or results\n- Numbers always outperform adjectives: write \"3x\" not \"significantly more\"\n\n---\n\n### OUTPUT FORMAT\n\nReturn the post in this exact format:\n\n```\nLINKEDIN POST (Educational):\n\n[Full post text \u2014 formatted with line breaks as it would appear on LinkedIn]\n\n---\nHASHTAGS: #tag1 #tag2 #tag3\nCHARACTER COUNT: [approximate]\n```\n"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {
+          "maxTokens": 500,
+          "temperature": 0.7
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        -128,
+        -176
+      ],
+      "id": "700d6624-f4d0-462a-8904-20c0aa773280",
+      "name": "OpenAI: LinkedIn Educational",
+      "credentials": {
+        "openAiApi": {
+          "id": "DskVTOJ1NdjW0dve",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "=# LinkedIn Engagement Post Prompt \u2014 Sales Connection Engine\n## n8n OpenAI Node \u2014 System + User Prompt\n\n---\n\n## VARIABLE DEFINITIONS (n8n Set Variables node)\n\n```\nindustry         = {{$node[\"Set Variables\"].json[\"industry\"]}}\ntarget_audience  = {{$node[\"Set Variables\"].json[\"target_audience\"]}}\ntopic_focus      = {{$node[\"Set Variables\"].json[\"topic_focus\"]}}\nbrand_voice      = {{$node[\"Set Variables\"].json[\"brand_voice\"]}}\ntopic            = {{$node[\"Set Variables\"].json[\"topic\"]}}\n```\n\n---\n\n## SYSTEM PROMPT\n\nYou are a LinkedIn content writer for Sales Connection Engine, a premium US-based appointment setting firm. You write short engagement posts designed to drive comments and replies from B2B sales leaders and business owners.\n\nEngagement posts are different from educational posts. Their job is to start a conversation \u2014 not to teach. They are shorter, more direct, and end with a question or poll that people genuinely want to answer.\n\nYour engagement posts:\n- Get to the question or provocative statement fast \u2014 no preamble\n- Feel like something a real sales practitioner would post between meetings\n- Invite genuine opinions, not performative agreement\n- Create a safe space to share frustrations, contrarian views, or real experiences\n- Sound conversational \u2014 like a text message to a peer, not a LinkedIn article\n\nYou do NOT:\n- Write long setup paragraphs before getting to the point\n- Ask questions with obvious or boring answers\n- Use engagement bait (\"Comment YES if you agree\")\n- Use hype language or motivational filler\n- End with hashtags on engagement posts (optional, max 1 if used)\n- Use exclamation points\n\n---\n\n## USER PROMPT\n\nWrite a short LinkedIn engagement post for Sales Connection Engine on the following topic:\n\n**Topic:** {{$node[\"Set Variables\"].json[\"topic\"]}}\n\n**Industry context:** {{$node[\"Set Variables\"].json[\"industry\"]}}\n**Target reader:** {{$node[\"Set Variables\"].json[\"target_audience\"]}}\n**Topic focus area:** {{$node[\"Set Variables\"].json[\"topic_focus\"]}}\n**Brand voice:** {{$node[\"Set Variables\"].json[\"brand_voice\"]}}\n\n---\n\n### STRUCTURE REQUIREMENTS\n\n**Option A \u2014 Question post**\n- 1\u20132 sentences of brief context that frames why this question matters right now\n- 1 direct, specific question that the target reader would have a genuine opinion about\n- Optional: 1 line sharing your own perspective or leaning (makes the post feel less like a survey)\n\n**Option B \u2014 Poll post**\n- 1 sentence framing the topic\n- A poll question with 2\u20134 concrete answer options\n- 1 follow-up line asking people to share why in the comments\n\n**Option C \u2014 Debate starter**\n- State a moderately contrarian position in 1\u20132 sentences\n- Acknowledge the counterargument briefly\n- Ask which side readers fall on \u2014 and why\n\nChoose whichever format fits the topic best. Do not mix formats.\n\n---\n\n### STYLE RULES\n\n- Total length: 80\u2013120 words (strict \u2014 shorter is better for engagement posts)\n- No more than 2\u20133 sentences before the question or provocative line\n- Write in first person where natural (\"I've noticed...\", \"We see this a lot...\")\n- Questions must be specific: \"What's your current SDR cost per meeting?\" beats \"What do you think about SDR costs?\"\n- Avoid questions with yes/no answers \u2014 push for nuance\n- No bullet lists\n- No hashtags (or max 1 if genuinely relevant)\n- No exclamation points\n- No em-dashes\n\n---\n\n### OUTPUT FORMAT\n\nReturn the post in this exact format:\n\n```\nLINKEDIN POST (Engagement):\n\nFORMAT USED: [Question / Poll / Debate Starter]\n\n[Full post text \u2014 formatted with line breaks as it would appear on LinkedIn]\n\n---\nCHARACTER COUNT: [approximate]\n```\n"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {
+          "maxTokens": 500,
+          "temperature": 0.7
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        -128,
+        -32
+      ],
+      "id": "b1fb950c-8a89-4395-bd88-7b731135745b",
+      "name": "OpenAI: LinkedIn Engagement",
+      "credentials": {
+        "openAiApi": {
+          "id": "DskVTOJ1NdjW0dve",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "=# X Insight Post Prompt \u2014 Sales Connection Engine\n## n8n OpenAI Node \u2014 System + User Prompt\n\n---\n\n## VARIABLE DEFINITIONS (n8n Set Variables node)\n\n```\nindustry         = {{$node[\"Set Variables\"].json[\"industry\"]}}\ntarget_audience  = {{$node[\"Set Variables\"].json[\"target_audience\"]}}\ntopic_focus      = {{$node[\"Set Variables\"].json[\"topic_focus\"]}}\nbrand_voice      = {{$node[\"Set Variables\"].json[\"brand_voice\"]}}\ntopic            = {{$node[\"Set Variables\"].json[\"topic\"]}}\n```\n\n---\n\n## SYSTEM PROMPT\n\nYou are a content writer for Sales Connection Engine, a premium US-based appointment setting firm. You write X (Twitter) posts that deliver sharp, quotable insights on outbound sales, appointment setting, and B2B pipeline development.\n\nX insight posts are built for shareability. They work when someone reads them and thinks \"I need to send this to my sales team\" or \"I've been thinking this for years but never said it this clearly.\"\n\nYour X insight posts:\n- Land one clear idea \u2014 not two or three\n- Use a specific number or benchmark when available (makes the post more credible and shareable)\n- Make a claim that has a slight edge \u2014 not offensive, but not safe and forgettable either\n- Read cleanly in one pass \u2014 no rereading required to understand the point\n- Sound like they came from someone who runs outbound programs, not someone who reads about them\n\nYou do NOT:\n- Use hashtags (they reduce shareability and look spammy on X)\n- Use exclamation points\n- Write generic sales motivation (\"Work hard, stay consistent\")\n- Pad the post with filler words to hit a length\n- Use hype language: \"game-changer\", \"crush it\", \"dominate\"\n- State the obvious\n\n---\n\n## USER PROMPT\n\nWrite an X insight post for Sales Connection Engine on the following topic:\n\n**Topic:** {{$node[\"Set Variables\"].json[\"topic\"]}}\n\n**Industry context:** {{$node[\"Set Variables\"].json[\"industry\"]}}\n**Target reader:** {{$node[\"Set Variables\"].json[\"target_audience\"]}}\n**Topic focus area:** {{$node[\"Set Variables\"].json[\"topic_focus\"]}}\n**Brand voice:** {{$node[\"Set Variables\"].json[\"brand_voice\"]}}\n\n---\n\n### STRUCTURE REQUIREMENTS\n\nChoose the format that best fits the topic:\n\n**Option A \u2014 Stat + implication**\nLead with a specific number, then immediately draw out why it matters or what it means for the reader.\nExample structure: \"[Stat].\\n[What that means for your pipeline/team/business].\"\n\n**Option B \u2014 Contrarian claim**\nState a position that challenges a common assumption. Keep it grounded \u2014 contrarian, not clickbait.\nExample structure: \"[Common belief].\\n[Why that's wrong or incomplete].\\n[What's actually true].\"\n\n**Option C \u2014 The math**\nBreak down a simple calculation that makes a point more concrete than any argument could.\nExample structure: \"[Variable 1] \u2192 [Variable 2] \u2192 [Variable 3] \u2192 [result].\\n[One-line implication].\"\n\n**Option D \u2014 Sharp observation**\nState a direct observation about what most sales teams or companies get wrong. No hedging.\nExample structure: \"Most [companies/teams/founders] [do X].\\n[Why that's costing them Y].\"\n\n---\n\n### HARD RULES\n\n- **MAXIMUM 280 characters \u2014 this is a strict limit, not a target**\n- Count every character including spaces and punctuation before finalizing\n- No hashtags \u2014 none, ever\n- No exclamation points\n- No em-dashes\n- Plain text only \u2014 no bold, no formatting\n- One idea only \u2014 do not try to make two points\n- If using a line break, use a single line break (one \\n) not a double\n\n---\n\n### OUTPUT FORMAT\n\nReturn the post in this exact format:\n\n```\nX POST (Insight):\n\n[Full post text]\n\n---\nCHARACTER COUNT: [exact count]\nOVER LIMIT: [Yes / No]\nFORMAT USED: [Stat + Implication / Contrarian Claim / The Math / Sharp Observation]\n```\n\nIf the character count is over 280, rewrite until it is under. Do not return a post that exceeds the limit.\n"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {
+          "maxTokens": 150,
+          "temperature": 0.7
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        -128,
+        80
+      ],
+      "id": "3e71423f-e22e-4358-9258-ce9fabfaf9bc",
+      "name": "OpenAI: X Insight",
+      "credentials": {
+        "openAiApi": {
+          "id": "DskVTOJ1NdjW0dve",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "=# X Engagement Post Prompt \u2014 Sales Connection Engine\n## n8n OpenAI Node \u2014 System + User Prompt\n\n---\n\n## VARIABLE DEFINITIONS (n8n Set Variables node)\n\n```\nindustry         = {{$node[\"Set Variables\"].json[\"industry\"]}}\ntarget_audience  = {{$node[\"Set Variables\"].json[\"target_audience\"]}}\ntopic_focus      = {{$node[\"Set Variables\"].json[\"topic_focus\"]}}\nbrand_voice      = {{$node[\"Set Variables\"].json[\"brand_voice\"]}}\ntopic            = {{$node[\"Set Variables\"].json[\"topic\"]}}\n```\n\n---\n\n## SYSTEM PROMPT\n\nYou are a content writer for Sales Connection Engine, a premium US-based appointment setting firm. You write X (Twitter) posts designed to generate replies from B2B sales leaders, founders, and revenue operators.\n\nX engagement posts work differently from insight posts. Their job is to open a conversation \u2014 not to deliver a conclusion. The best ones make people want to share their own experience, challenge the premise, or admit something they don't usually say publicly.\n\nYour X engagement posts:\n- Ask something the target reader has an actual opinion on\n- Create a mild tension or debate worth having\n- Feel spontaneous \u2014 like something someone typed between meetings, not a scheduled campaign post\n- Invite replies without demanding them\n- Leave room for multiple valid answers\n\nYou do NOT:\n- Ask yes/no questions with obvious answers\n- Use hashtags\n- Use exclamation points\n- Write questions so broad they feel like a survey (\"What do you think about outbound sales?\")\n- Pretend to be neutral when you clearly have a position \u2014 just state it\n- Use hype language or motivational filler\n\n---\n\n## USER PROMPT\n\nWrite an X engagement post for Sales Connection Engine on the following topic:\n\n**Topic:** {{$node[\"Set Variables\"].json[\"topic\"]}}\n\n**Industry context:** {{$node[\"Set Variables\"].json[\"industry\"]}}\n**Target reader:** {{$node[\"Set Variables\"].json[\"target_audience\"]}}\n**Topic focus area:** {{$node[\"Set Variables\"].json[\"topic_focus\"]}}\n**Brand voice:** {{$node[\"Set Variables\"].json[\"brand_voice\"]}}\n\n---\n\n### STRUCTURE REQUIREMENTS\n\nChoose the format that best fits the topic:\n\n**Option A \u2014 Honest question**\nState a real question you (as Sales Connection Engine) would genuinely want to know the answer to. Optional: add one sentence of context before the question to make it less abrupt.\nExample: \"We track show-up rate obsessively. Most teams don't.\\nWhat metrics does your outbound team actually live and die by?\"\n\n**Option B \u2014 Forced choice**\nPresent two valid approaches or positions and ask which the reader leans toward \u2014 and why.\nExample: \"More dials or better targeting?\\nWhich one moves your pipeline more?\"\n\n**Option C \u2014 Admit something**\nShare a candid observation that normalizes something the target reader might feel but not say.\nExample: \"Most sales leaders know their pipeline is shallow but won't say it out loud.\\nWhat's the number you don't love sharing in your weekly review?\"\n\n**Option D \u2014 Scenario**\nSet up a concrete scenario and ask what the reader would do.\nExample: \"Your SDR has been on the team 90 days, 0 meetings booked. What do you do?\"\n\n---\n\n### HARD RULES\n\n- **MAXIMUM 280 characters \u2014 strict limit, count every character before finalizing**\n- No hashtags \u2014 none\n- No exclamation points\n- No em-dashes\n- Plain text only\n- One question maximum \u2014 do not stack two questions\n- The question must be specific enough that different people could give genuinely different answers\n- If using a line break, use a single \\n not double\n\n---\n\n### OUTPUT FORMAT\n\nReturn the post in this exact format:\n\n```\nX POST (Engagement):\n\n[Full post text]\n\n---\nCHARACTER COUNT: [exact count]\nOVER LIMIT: [Yes / No]\nFORMAT USED: [Honest Question / Forced Choice / Admit Something / Scenario]\n```\n\nIf the character count is over 280, rewrite until it is under. Do not return a post that exceeds the limit.\n"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {
+          "maxTokens": 150,
+          "temperature": 0.7
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        -128,
+        208
+      ],
+      "id": "d18196d5-9b4c-4065-b60e-ce7cb5a6c495",
+      "name": "OpenAI: X Engagement",
+      "credentials": {
+        "openAiApi": {
+          "id": "DskVTOJ1NdjW0dve",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "=# Newsletter Section Prompt \u2014 Sales Connection Engine\n## n8n OpenAI Node \u2014 System + User Prompt\n\n---\n\n## VARIABLE DEFINITIONS (n8n Set Variables node)\n\n```\nindustry         = {{$node[\"Set Variables\"].json[\"industry\"]}}\ntarget_audience  = {{$node[\"Set Variables\"].json[\"target_audience\"]}}\ntopic_focus      = {{$node[\"Set Variables\"].json[\"topic_focus\"]}}\nbrand_voice      = {{$node[\"Set Variables\"].json[\"brand_voice\"]}}\ntopic            = {{$node[\"Set Variables\"].json[\"topic\"]}}\n```\n\n---\n\n## SYSTEM PROMPT\n\nYou are a B2B newsletter writer for Sales Connection Engine, a premium US-based appointment setting firm. You write newsletter sections read by business owners, sales leaders, and founders who manage outbound sales programs.\n\nNewsletter readers are busy. They skim before they read. Your job is to make every tip land in the first sentence so skimmers still get value \u2014 and make the full 2\u20133 sentences worth reading for those who stop.\n\nYour newsletter sections:\n- Lead with a short intro that frames the problem or opportunity in 2\u20133 sentences\n- Break advice into numbered tips that are specific and immediately usable\n- Use real numbers and examples \u2014 not general principles\n- Sound like a practitioner sharing hard-won lessons, not a consultant packaging generic frameworks\n- Close with a soft, low-friction invitation \u2014 never a hard pitch\n\nYou do NOT:\n- Write tips so vague they could apply to any industry (\"Communicate clearly with your team\")\n- Use hype language or motivational filler\n- Bury the point in a long windup paragraph\n- Use exclamation points\n- End with \"If you found this valuable, forward to a friend\"\n- Summarize what you just said in the closing \u2014 add one new thought instead\n\n---\n\n## USER PROMPT\n\nWrite a newsletter section for Sales Connection Engine on the following topic:\n\n**Topic:** {{$node[\"Set Variables\"].json[\"topic\"]}}\n\n**Industry context:** {{$node[\"Set Variables\"].json[\"industry\"]}}\n**Target reader:** {{$node[\"Set Variables\"].json[\"target_audience\"]}}\n**Topic focus area:** {{$node[\"Set Variables\"].json[\"topic_focus\"]}}\n**Brand voice:** {{$node[\"Set Variables\"].json[\"brand_voice\"]}}\n\n---\n\n### STRUCTURE REQUIREMENTS\n\n**Section title**\nFormat: `Quick Tips: [Topic-related title]`\nThe title should be specific, not clever. Tell the reader exactly what they're about to get.\nExample: \"Quick Tips: How to Reduce No-Shows on Outbound Meetings\"\nNot: \"Quick Tips: Making the Most of Your Pipeline\"\n\n**Intro paragraph (2\u20133 sentences)**\nFrame the problem or context. Why does this topic matter right now? What are most teams getting wrong?\nKeep it tight \u2014 this is the setup, not the main event.\n\n**5 numbered tips**\nEach tip follows this structure:\n- **Bold label:** A 3\u20136 word label that captures the tip's core idea (e.g., **Qualify before you pitch.**)\n- **Body:** 2\u20133 sentences that explain the tip with specifics. At least one sentence should include a concrete detail \u2014 a number, a real process step, or a named example.\n- Blank line between each tip for scannability\n\nTip quality standards:\n- Tip 1 should be the most important or most commonly neglected\n- At least 2 tips should include a specific number or benchmark\n- Tips should not repeat each other \u2014 each must add a distinct angle\n- Tips should be in order of logical dependency where possible (e.g., strategy before tactics)\n\n**Closing (2\u20133 sentences)**\nDo not summarize the tips. Instead:\n- Add one final observation that adds a different angle or raises a question the reader is now likely thinking\n- Close with a low-friction soft CTA \u2014 an invitation to respond, reach out, or think further\n- Example: \"The biggest bottleneck we see isn't tools or budget \u2014 it's not knowing where in the funnel the drop-off is happening. If that sounds familiar, happy to take a look.\"\n\n---\n\n### STYLE RULES\n\n- Total length: 400\u2013500 words (strict range \u2014 do not go under 380 or over 520)\n- Paragraph length: 2\u20133 sentences maximum for intro and closing\n- Tip body: 2\u20133 sentences, no more\n- Bold only the tip label \u2014 nothing else\n- No bullet points within tips\n- No exclamation points\n- No em-dashes\n- Numbers are always preferred over adjectives (\"4 out of 5 meetings\" vs \"most meetings\")\n- Write \"we\" when referencing Sales Connection Engine's experience or observations\n\n---\n\n### OUTPUT FORMAT\n\nReturn the section in this exact format:\n\n```\nNEWSLETTER SECTION:\n\nSECTION TITLE: Quick Tips: [Title]\n\n---\n\n[Intro paragraph]\n\n1. **[Tip label.]** [2\u20133 sentence explanation with specific detail.]\n\n2. **[Tip label.]** [2\u20133 sentence explanation with specific detail.]\n\n3. **[Tip label.]** [2\u20133 sentence explanation with specific detail.]\n\n4. **[Tip label.]** [2\u20133 sentence explanation with specific detail.]\n\n5. **[Tip label.]** [2\u20133 sentence explanation with specific detail.]\n\n[Closing paragraph + soft CTA]\n\n---\nWORD COUNT: [approximate]\n```\n"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {
+          "maxTokens": 1000,
+          "temperature": 0.7
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        -128,
+        352
+      ],
+      "id": "afe50f90-9a9a-4e13-877c-61b341d3fd55",
+      "name": "OpenAI: Newsletter Section",
+      "credentials": {
+        "openAiApi": {
+          "id": "DskVTOJ1NdjW0dve",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get all inputs\nconst inputs = $input.all();\n\n// Find Set Variables and extract topic\nlet topic = 'Content Batch';\nfor (const input of inputs) {\n  if (input.json.topic) {\n    topic = input.json.topic;\n    break;\n  }\n}\n\n// Extract content from each OpenAI node by checking for its unique output\n// We'll build a map of all content first\nconst allContent = [];\nfor (const input of inputs) {\n  if (input.json.output && input.json.output[0]?.content?.[0]?.text) {\n    allContent.push(input.json.output[0].content[0].text);\n  }\n}\n\n// Now detect each piece by its unique markers\nlet blog = 'Blog not generated';\nlet linkedin1 = 'LinkedIn 1 not generated';\nlet linkedin2 = 'LinkedIn 2 not generated';\nlet facebook = 'Facebook not generated';\nlet x1 = 'X post 1 not generated';\nlet x2 = 'X post 2 not generated';\nlet newsletter = 'Newsletter not generated';\n\nfor (const content of allContent) {\n  // Blog: has TITLE: and META DESCRIPTION\n  if (content.includes('TITLE:') && content.includes('META DESCRIPTION')) {\n    blog = content;\n  }\n  // LinkedIn Educational: has \"LINKEDIN POST (Educational)\"\n  else if (content.includes('LINKEDIN POST (Educational)')) {\n    linkedin1 = content;\n  }\n  // LinkedIn Engagement: has \"LINKEDIN POST (Engagement)\" or \"X POST (Engagement)\" with long form\n  else if (content.includes('LINKEDIN POST (Engagement)')) {\n    linkedin2 = content;\n  }\n  // Facebook: has \u274c and \u2714 and DM/Comment with short length\n    else if (content.includes('\u274c') && content.includes('\u2714') && content.includes('Comment ') && content.length < 800) {\n    facebook = content;\n  }\n  // X Insight: has \"X POST (Insight)\"\n  else if (content.includes('X POST (Insight)')) {\n    x1 = content;\n  }\n  // X Engagement: has \"X POST (Engagement)\" and is very short\n    else if (content.includes('X POST (Engagement)')) {\n  x2 = content;\n  }\n  // Newsletter: has \"NEWSLETTER SECTION:\" and \"SECTION TITLE:\" and \"Quick Tips\"\n  else if (content.includes('NEWSLETTER SECTION:') && content.includes('SECTION TITLE:') && content.includes('Quick Tips')) {\n    newsletter = content;\n  }\n}\n\n// Format into organized document\nconst formattedContent = `CONTENT BATCH - ${topic}\nGenerated: ${new Date().toLocaleDateString()}\n\n\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n\n\ud83d\udcdd BLOG POST\n\n${blog}\n\n\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n\n\ud83d\udcbc LINKEDIN POSTS\n\nPost 1 (Educational):\n${linkedin1}\n\n---\n\nPost 2 (Engagement):\n${linkedin2}\n\n\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n\n\ud83d\udcd8 FACEBOOK POST\n\n${facebook}\n\n\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n\n\ud83d\udc26 X POSTS\n\nPost 1 (Insight):\n${x1}\n\n---\n\nPost 2 (Engagement):\n${x2}\n\n\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n\n\ud83d\udce7 NEWSLETTER SECTION\n\n${newsletter}\n\n\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n\nEND OF CONTENT BATCH\n`;\n\nreturn [{ json: { content: formattedContent, topic: topic } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        816,
+        -32
+      ],
+      "id": "a0b3909f-4ce9-4d13-8c99-5508b26e4685",
+      "name": "Format Output"
+    },
+    {
+      "parameters": {
+        "operation": "createFromText",
+        "content": "={{$json.content}}\n",
+        "name": "=Content Batch - {{$('Set Variables').item.json.topic}} - {{$now.format('YYYY-MM-DD')}}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "18-H2k_GTPTsxC2b5VbeP2LcFwuCdNCmG",
+          "mode": "list",
+          "cachedResultName": "Brandon",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/18-H2k_GTPTsxC2b5VbeP2LcFwuCdNCmG"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1024,
+        -48
+      ],
+      "id": "c6d7e023-0058-42e2-8e3b-620ce94c2330",
+      "name": "Google Docs",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "xwDITuc0qabO3UQR",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "rajiv.unnikrishnan@gmail.com",
+        "subject": "=Content Batch Generated - {{$('Set Variables').item.json.topic}}",
+        "message": "=Your content batch has been generated successfully!  Topic: {{$('Set Variables').item.json.topic}} Generated: {{$now.format('YYYY-MM-DD HH:mm')}}  Content includes: - 1 Blog post - 2 LinkedIn posts - 2 X posts - 1 Newsletter section  Check your Google Drive for the document.",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1232,
+        -48
+      ],
+      "id": "1b9d2b3a-ae28-4e96-a863-1b64a3d3587e",
+      "name": "Send a message",
+      "webhookId": "ad89f828-f96a-48a7-a5f7-65b9538fbee0",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "sHbJF5Zc84Wb6kqH",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "numberInputs": 8
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        576,
+        -112
+      ],
+      "id": "ae65b879-f709-4050-865b-468c68af1a7a",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.perplexity.ai/chat/completions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_API_TOKEN_HERE"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"model\": \"sonar\",\n  \"messages\": [\n    {\n      \"role\": \"user\",\n      \"content\": \"What is the single most trending topic in B2B sales for April 2026? Return only a blog post title.\"\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -480,
+        -224
+      ],
+      "id": "a993c33d-1de2-4137-a0c4-37b5417c4d36",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "=INDUSTRY: {{$node[\"Set Variables\"].json[\"industry\"]}}\nTARGET_AUDIENCE: {{$node[\"Set Variables\"].json[\"target_audience\"]}}\nTOPIC_FOCUS: {{$node[\"Set Variables\"].json[\"topic_focus\"]}}\nBRAND_VOICE: Direct, action-oriented, conversational with urgency\nTOPIC: {{$node[\"Set Variables\"].json[\"topic\"]}}\n\nWrite a Facebook post for Sales Connection Engine.\n\nSTYLE:\n- Short and punchy (100-150 words MAX)\n- Pattern-interrupt hook in first line\n- Use visual contrast: \u274c for problems, \u2714 for solutions\n- Conversational, not corporate\n- Create urgency without being pushy\n\nSTRUCTURE:\n[Hook - one powerful statement that stops the scroll]\n\n[2-3 lines expanding the problem or insight]\n\n[Our approach - 2-3 bullet points with \u2714 or \u274c]\n\n[Direct CTA - \"DM 'KEYWORD'\" or \"Comment 'KEYWORD'\"]\n\nEXAMPLES OF BRANDON'S HOOKS:\n- \"Most sales teams don't have a lead problem. They have a conversation problem.\"\n- \"Why most outsourced outbound quietly fails...\"\n- \"Prospects decide whether to engage in the first 10 seconds of a call.\"\n\nUse similar pattern-interrupt style. Generate the Facebook post now."
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {
+          "maxTokens": 300,
+          "temperature": 0.7
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        -128,
+        512
+      ],
+      "id": "a079e3a9-9197-460e-83ec-a26c1808d7c6",
+      "name": "OpenAI: Facebook Post",
+      "credentials": {
+        "openAiApi": {
+          "id": "DskVTOJ1NdjW0dve",
+          "name": "OpenAi account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking \u2018Execute workflow\u2019": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Variables": {
+      "main": [
+        [
+          {
+            "node": "OpenAI: Blog Post",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "OpenAI: LinkedIn Educational",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "OpenAI: LinkedIn Engagement",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "OpenAI: X Insight",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "OpenAI: X Engagement",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "OpenAI: Newsletter Section",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 6
+          },
+          {
+            "node": "OpenAI: Facebook Post",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI: LinkedIn Educational": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "OpenAI: Blog Post": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI: LinkedIn Engagement": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "OpenAI: X Insight": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "OpenAI: X Engagement": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 4
+          }
+        ]
+      ]
+    },
+    "OpenAI: Newsletter Section": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 5
+          }
+        ]
+      ]
+    },
+    "Format Output": {
+      "main": [
+        [
+          {
+            "node": "Google Docs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Docs": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Format Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Set Variables",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI: Facebook Post": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 7
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "166d9eb2-b5d4-4d94-ab89-29b81c3ee470",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ce14a24ff2970397f7d3c265029c8f7c83befeb39e2972f97271fa7780cd181c"
+  },
+  "id": "vAlIGcx8FCdE3jHY",
+  "tags": []
+}
