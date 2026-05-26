@@ -1,0 +1,270 @@
+{
+  "name": "Accounting Firm Outreach - Email 2 Follow-up",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 9 * * 1-5"
+            }
+          ]
+        }
+      },
+      "id": "e2b00002-0000-0000-0000-000000000001",
+      "name": "Schedule: Weekdays 9am",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [-1000, 0]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cfg-001",
+              "name": "loom_url",
+              "value": "PASTE_YOUR_LOOM_URL_HERE",
+              "type": "string"
+            },
+            {
+              "id": "cfg-002",
+              "name": "sender_name",
+              "value": "YOUR_NAME_HERE",
+              "type": "string"
+            },
+            {
+              "id": "cfg-003",
+              "name": "sender_email",
+              "value": "YOUR_EMAIL@DOMAIN.COM",
+              "type": "string"
+            },
+            {
+              "id": "cfg-004",
+              "name": "sheet_id",
+              "value": "YOUR_GOOGLE_SHEET_ID_HERE",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "e2b00002-0000-0000-0000-000000000002",
+      "name": "Campaign Config",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [-760, 0]
+    },
+    {
+      "parameters": {
+        "operation": "getRows",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $json.sheet_id }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Outreach Tracker",
+          "mode": "name"
+        },
+        "options": {}
+      },
+      "id": "e2b00002-0000-0000-0000-000000000003",
+      "name": "Get All Sheet Rows",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [-520, 0]
+    },
+    {
+      "parameters": {
+        "jsCode": "const today = $now.toFormat('yyyy-MM-dd');\nconst config = $('Campaign Config').first().json;\nconst rows = $input.all();\n\n// Filter: Email 2 Due Date <= today AND Email 2 Sent is not 'Yes'\nconst due = rows.filter(item => {\n  const row = item.json;\n  const dueDate = row['Email 2 Due Date'] || '';\n  const alreadySent = (row['Email 2 Sent'] || '').trim().toLowerCase();\n  return dueDate <= today && alreadySent !== 'yes';\n});\n\nif (due.length === 0) {\n  // Return an empty sentinel so the loop doesn't throw an error\n  return [{ json: { _no_contacts_due: true } }];\n}\n\nconsole.log(`${due.length} contact(s) due for Email 2 today (${today}).`);\n\n// Attach config to each row\nreturn due.map(item => ({\n  json: {\n    ...item.json,\n    loom_url: config.loom_url,\n    sender_name: config.sender_name,\n    sender_email: config.sender_email,\n    sheet_id: config.sheet_id\n  }\n}));"
+      },
+      "id": "e2b00002-0000-0000-0000-000000000004",
+      "name": "Filter: Due for Email 2",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-280, 0]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "cond-001",
+              "leftValue": "={{ $json._no_contacts_due }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "e2b00002-0000-0000-0000-000000000005",
+      "name": "IF: Contacts Due",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [-40, 0]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "e2b00002-0000-0000-0000-000000000006",
+      "name": "Email 2 Loop",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [200, -100]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const c = $input.item.json;\n\nconst firstName = c['First Name'] || 'there';\nconst companyName = c['Company'] || 'your firm';\nconst loomUrl = c.loom_url || 'YOUR_LOOM_URL';\nconst senderName = c.sender_name || 'Your Name';\n\nconst subject = `Re: ${companyName}'s intake process`;\n\nconst body = `${firstName},\n\nMost mid-sized accounting firms lose £50k-£80k in annual revenue from after-hours inquiries that never convert.\n\nThe gap: Prospect emails at 7pm on Friday asking about year-end accounts. No response until Monday 10am. By then, they've already booked a discovery call with the firm that replied Saturday morning.\n\nWhat we built for similar firms:\n\n- WhatsApp/email AI that qualifies prospects in under 60 seconds\n- Instant responses 24/7 (even when your team is offline)\n- Hot leads routed to your CRM with full context\n\nResult: Qualified prospect pipeline increases 3-4x without adding headcount.\n\nI recorded a 90-second breakdown of how it works: ${loomUrl}\n\nWorth a look?\n\nBest,\n${senderName}`;\n\nreturn [{\n  json: {\n    ...c,\n    email_subject: subject,\n    email_body: body,\n    contact_email: c['Email']\n  }\n}];"
+      },
+      "id": "e2b00002-0000-0000-0000-000000000007",
+      "name": "Build Email 2",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [440, -100]
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.contact_email }}",
+        "subject": "={{ $json.email_subject }}",
+        "message": "={{ $json.email_body }}",
+        "options": {
+          "replyTo": "={{ $json.sender_email }}"
+        }
+      },
+      "id": "e2b00002-0000-0000-0000-000000000008",
+      "name": "Send Email 2",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [680, -100],
+      "webhookId": "e2b00002-0000-0000-0000-000000000018"
+    },
+    {
+      "parameters": {
+        "amount": 3
+      },
+      "id": "e2b00002-0000-0000-0000-000000000009",
+      "name": "Wait 3s (Rate Limit)",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "webhookId": "e2b00002-0000-0000-0000-000000000019",
+      "position": [920, -100]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('Campaign Config').first().json.sheet_id }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Outreach Tracker",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Email": "={{ $json.contact_email }}",
+            "Email 2 Sent": "Yes",
+            "Email 2 Sent Date": "={{ $now.toFormat('yyyy-MM-dd') }}"
+          },
+          "matchingColumns": ["Email"],
+          "schema": [
+            {"id": "Email", "displayName": "Email", "required": false, "defaultMatch": true, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "Email 2 Sent", "displayName": "Email 2 Sent", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": false},
+            {"id": "Email 2 Sent Date", "displayName": "Email 2 Sent Date", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": false}
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "e2b00002-0000-0000-0000-000000000010",
+      "name": "Mark Email 2 Sent",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [1160, -100]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule: Weekdays 9am": {
+      "main": [
+        [{"node": "Campaign Config", "type": "main", "index": 0}]
+      ]
+    },
+    "Campaign Config": {
+      "main": [
+        [{"node": "Get All Sheet Rows", "type": "main", "index": 0}]
+      ]
+    },
+    "Get All Sheet Rows": {
+      "main": [
+        [{"node": "Filter: Due for Email 2", "type": "main", "index": 0}]
+      ]
+    },
+    "Filter: Due for Email 2": {
+      "main": [
+        [{"node": "IF: Contacts Due", "type": "main", "index": 0}]
+      ]
+    },
+    "IF: Contacts Due": {
+      "main": [
+        [{"node": "Email 2 Loop", "type": "main", "index": 0}],
+        []
+      ]
+    },
+    "Email 2 Loop": {
+      "main": [
+        [{"node": "Build Email 2", "type": "main", "index": 0}],
+        []
+      ]
+    },
+    "Build Email 2": {
+      "main": [
+        [{"node": "Send Email 2", "type": "main", "index": 0}]
+      ]
+    },
+    "Send Email 2": {
+      "main": [
+        [{"node": "Wait 3s (Rate Limit)", "type": "main", "index": 0}]
+      ]
+    },
+    "Wait 3s (Rate Limit)": {
+      "main": [
+        [{"node": "Mark Email 2 Sent", "type": "main", "index": 0}]
+      ]
+    },
+    "Mark Email 2 Sent": {
+      "main": [
+        [{"node": "Email 2 Loop", "type": "main", "index": 0}]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "e2b00002-0000-0000-0000-000000000099",
+  "meta": {
+    "instanceId": "ce14a24ff2970397f7d3c265029c8f7c83befeb39e2972f97271fa7780cd181c"
+  },
+  "id": "AcctEmail2Followup002",
+  "tags": []
+}
